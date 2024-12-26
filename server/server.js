@@ -20,6 +20,7 @@ wss.on("connection", (ws) => {
 
   ws.on("message", (message) => {
     const textMessage = message.toString();
+    console.log(textMessage);
 
     // 메시지를 받으면 다른 클라이언트에게 전달
     wss.clients.forEach((client) => {

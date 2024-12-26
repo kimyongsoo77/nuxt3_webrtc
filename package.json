@@ -7,11 +7,14 @@
     "dev": "nuxt dev ",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "server": "node ./server/index.js"
   },
   "dependencies": {
     "https": "^1.0.0",
     "nuxt": "^3.14.1592",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1",
     "vue": "latest",
     "vue-router": "latest",
     "ws": "^8.18.0"
