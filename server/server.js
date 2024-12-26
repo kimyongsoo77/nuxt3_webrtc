@@ -24,6 +24,7 @@ wss.on("connection", (ws) => {
 
     // 메시지를 받으면 다른 클라이언트에게 전달
     wss.clients.forEach((client) => {
+      // 보낸 사람을 제외하고 나머지 접속하자한테 전송한다
       if (client !== ws && client.readyState === WebSocket.OPEN) {
         client.send(textMessage);
       }

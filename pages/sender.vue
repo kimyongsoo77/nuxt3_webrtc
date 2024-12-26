@@ -66,21 +66,21 @@ async function startSharing() {
   // localVideo.value.srcObject = stream;
   peerConnection.addStream(stream);
 
-  peerConnection.onicecandidate = gotLocalIceCandidateOffer;
+  // peerConnection.onicecandidate = gotLocalIceCandidateOffer;
   // Offer 생성 및 Signal Server로 전송
   const offer = await peerConnection.createOffer();
   await peerConnection.setLocalDescription(offer);
-  socket.emit("offer", peerConnection.localDescription);
+  socket.emit("offer", offer);
 }
 
 // ICE 후보 처리
-// socket.on("candidate", (candidate) => {
-//   if (peerConnection.remoteDescription) {
-//     peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
-//   } else {
-//     console.log("Waiting for remote description before adding candidate.");
-//   }
-// });
+socket.on("candidate", (candidate) => {
+  if (peerConnection.remoteDescription) {
+    peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+  } else {
+    console.log("Waiting for remote description before adding candidate.");
+  }
+});
 
 socket.on("answer", async (answer) => {
   console.log("answer", answer);
@@ -88,11 +88,11 @@ socket.on("answer", async (answer) => {
 });
 
 // sender에서 발생
-const gotLocalIceCandidateOffer = (event) => {
-  if (!event.candidate) {
-    socket.emit("offer", peerConnection.localDescription);
-  }
-};
+// const gotLocalIceCandidateOffer = (event) => {
+//   if (!event.candidate) {
+//     socket.emit("offer", peerConnection.localDescription);
+//   }
+// };
 
 // Signal Server로부터 받은 Offer 처리
 // socket.on("offer", async (offer) => {
@@ -105,9 +105,10 @@ const gotLocalIceCandidateOffer = (event) => {
 // });
 
 // ICE 후보 처리
-// peerConnection.onicecandidate = (event) => {
-//   if (event.candidate) {
-//     socket.emit("candidate", event.candidate);
-//   }
-// };
+peerConnection.onicecandidate = (event) => {
+  if (event.candidate) {
+    console.log("sender onicecandidate", event.candidate);
+    socket.emit("candidate", event.candidate);
+  }
+};
 </script>
